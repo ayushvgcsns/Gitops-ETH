@@ -3,8 +3,9 @@ kind: Service
 metadata:
   name: {{ .Release.Name }}
   namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}
 spec:
-  type: {{ .Values.service.type }}
   ports:
     - name: http-rpc
       port: {{ .Values.service.rpcPort }}
@@ -15,5 +16,13 @@ spec:
     - name: metrics
       port: {{ .Values.service.metricsPort }}
       targetPort: metrics
+    - name: p2p-tcp
+      port: 30303
+      targetPort: p2p-tcp
+    - name: p2p-udp
+      port: 30303
+      targetPort: p2p-udp
+      protocol: UDP
   selector:
     app: {{ .Release.Name }}
+  type: {{ .Values.service.type }}

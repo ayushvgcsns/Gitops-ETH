@@ -14,7 +14,7 @@ Required tools and versions:
 Minimum hardware requirements:
 - CPU: 4 cores
 - RAM: 8GB
-- Storage: 50GB
+- Storage: 200GB
 
 ## Repository Structure
 
@@ -26,9 +26,10 @@ Minimum hardware requirements:
 │   │   ├── Chart.yaml
 │   │   ├── values.yaml
 │   │   └── templates/
-│   │       ├── deployment.yaml
+│   │       ├── statefulset.yaml
 │   │       ├── service.yaml
 │   │       └── ingress.yaml
+|   |       └── configmap.yaml
 │   └── monitoring/             # Monitoring configuration
 │       └── values-custom.yaml
 ├── manifests/
