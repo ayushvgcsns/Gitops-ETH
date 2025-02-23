@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: geth
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/ayushvgcsns/Gitops-ETH.git
+    path: charts/geth
+    targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ethereum
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

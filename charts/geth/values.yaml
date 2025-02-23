@@ -1,0 +1,41 @@
+image:
+  repository: ethereum/client-go
+  tag: v1.13.8
+  pullPolicy: IfNotPresent
+
+network: "holesky"
+
+resources:
+  requests:
+    cpu: "2"
+    memory: "4Gi"
+  limits:
+    cpu: "4"
+    memory: "8Gi"
+
+persistence:
+  enabled: true
+  size: "200Gi"
+  storageClass: "standard"
+
+service:
+  type: ClusterIP
+  rpcPort: 8545
+  wsPort: 8546
+  metricsPort: 6060
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+  hosts:
+    - host: geth-rpc.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: geth-tls
+      hosts:
+        - geth-rpc.local

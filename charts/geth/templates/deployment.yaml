@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: geth
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - --{{ .Values.network }}
+            - --http
+            - --http.addr=0.0.0.0
+            - --http.port={{ .Values.service.rpcPort }}
+            - --http.api=eth,net,web3,txpool,debug
+            - --ws
+            - --ws.addr=0.0.0.0
+            - --ws.port={{ .Values.service.wsPort }}
+            - --metrics
+            - --metrics.addr=0.0.0.0
+            - --metrics.port={{ .Values.service.metricsPort }}
+          ports:
+            - name: http-rpc
+              containerPort: {{ .Values.service.rpcPort }}
+            - name: ws-rpc
+              containerPort: {{ .Values.service.wsPort }}
+            - name: metrics
+              containerPort: {{ .Values.service.metricsPort }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http-rpc
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http-rpc
+            initialDelaySeconds: 120
+            periodSeconds: 20
+          volumeMounts:
+            - name: data
+              mountPath: /root/.ethereum
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-data
