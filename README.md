@@ -45,7 +45,6 @@ Minimum hardware requirements:
 
 ## Quick Start
 
-For those familiar with Kubernetes and GitOps, here's the quick start guide:
 
 ```bash
 # Clone repository
