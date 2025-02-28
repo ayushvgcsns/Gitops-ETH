@@ -12,10 +12,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - {{ .Values.ingress.rpcHost }}
+    - {{ .Values.ingress.host }}
     secretName: {{ .Values.ingress.tlsSecretName }}
   rules:
-  - host: {{ .Values.ingress.rpcHost }}
+  - host: {{ .Values.ingress.host }}
     http:
       paths:
       - path: /

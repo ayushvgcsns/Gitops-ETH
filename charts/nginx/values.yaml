@@ -19,6 +19,7 @@ nginx:
     http: 80
 
 ingress:
+  host: ingress.local
   enabled: true
   className: "nginx"
   annotations:
