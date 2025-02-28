@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx
+  namespace: argocd
+  # Add these finalizers to prevent accidental deletion
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/ayushvgcsns/Gitops-ETH.git
+    path: charts/nginx
+    targetRevision: HEAD
+    helm:
+      values: |
+        # Any values you want to override from values.yaml
+        namespace: nginx
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ethereum
+
+  # Sync policy
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ApplyOutOfSyncOnly=true
+      - Validate=true
+
+  # Health assessment
+  revisionHistoryLimit: 3

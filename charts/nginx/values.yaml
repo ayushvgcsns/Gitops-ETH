@@ -1,0 +1,27 @@
+nameOverride: ""
+fullnameOverride: ""
+
+namespace: nginx
+
+
+nginx:
+  name: "nginx"
+  image:
+    repository: nginx
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    publicService:
+      enabled: false
+      type: NodePort
+  ports:
+    http: 80
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+  tlsSecretName: "geth-tls"
